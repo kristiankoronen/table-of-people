@@ -1,24 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+
+import PersonInput from './components/PersonInput';
+import MyTable from './components/MyTable';
+import Person from './models/Person';
+import INITIAL_PEOPLE from './data';
 
 function App() {
+  const [people, setPeople] = useState(INITIAL_PEOPLE);
+
+  const addPersonHandler = (personData: Person) => {
+    setPeople((prevState) => [...prevState, personData]);
+  };
+
+  const removePersonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const personId = Number(event.currentTarget.dataset.itemId);
+
+    setPeople((prevState) =>
+      prevState.filter((person) => person.id !== personId)
+    );
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <PersonInput onAddPerson={addPersonHandler} />
+      <MyTable items={people} onRemovePerson={removePersonHandler} />
     </div>
   );
 }
